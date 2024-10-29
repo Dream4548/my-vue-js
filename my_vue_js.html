@@ -1,31 +1,69 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="th">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-    <title>my vue</title>
+    <title>เพิ่มตัวเลขด้วย Vue.js</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .counter-container {
+            text-align: center;
+            border: 2px solid #FF8C00; /* สีส้มเข้ม */
+            border-radius: 10px;
+            padding: 30px;
+            background-color: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #FF4500; /* สีแดง */
+        }
+
+        button {
+            margin-top: 20px;
+            background-color: #FFA500; /* สีส้ม */
+            border-color: #FF8C00; /* สีส้มเข้ม */
+        }
+
+        button:hover {
+            background-color: #FF8C00; /* เปลี่ยนสีเมื่อเอาเมาส์ไปวาง */
+        }
+    </style>
 </head>
 
 <body>
-    <div id="app">
-        <div>{{message}}</div>
-        <div>{{name}}</div>
+    <div id="app" class="counter-container">
+        <h1>ตัวนับ: {{ count }}</h1>
+        <button @click="increment" class="btn btn-lg">เพิ่ม 1</button>
     </div>
-    
+
+    <!-- Vue.js -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script>
-        const { createApp, ref} = Vue
-        const app = createApp({
+        const { createApp } = Vue;
+
+        createApp({
             data() {
                 return {
-                    message: 'my_vue.js',
-                    name: 'ratchanon'
-                }
+                    count: 0
+                };
             },
-        }
-    )
-    app.mount('#app')
+            methods: {
+                increment() {
+                    this.count += 1; // เพิ่มจำนวนที่ต้องการที่นี่
+                }
+            }
+        }).mount('#app');
     </script>
 </body>
 
