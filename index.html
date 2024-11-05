@@ -1,102 +1,326 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ตัวนับ</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>แบบฟอร์มลงทะเบียน</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <style>
         body {
-            background-color: #2b3441;
-            min-height: 100vh;
-            display: flex;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Thonburi", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.5;
+            color: #333;
+        }
+
+        .form-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .radio-group {
+            margin-bottom: 15px;
+        }
+
+        .radio-label {
+            display: inline-flex;
             align-items: center;
-            justify-content: center;
+            margin-right: 16px;
+            cursor: pointer;
         }
-        
-        .counter-container {
-            background-color: #1a1e23;
-            border-radius: 15px;
-            padding: 2rem;
-            text-align: center;
-            max-width: 300px;
-            margin: 2rem auto;
-            color: white;
-        }
-        
-        .counter-value {
-            font-size: 4rem;
+
+        .section-title {
+            color: #2c5282;
+            font-size: 1.25rem;
             font-weight: bold;
-            margin: 1rem 0;
-        }
-        
-        .counter-title {
-            font-size: 1.5rem;
             margin-bottom: 1rem;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 0.5rem;
         }
-        
-        .btn-group {
-            display: flex;
-            gap: 0.5rem;
-            justify-content: center;
+
+        .security-code {
+            background-color: #f0fff4;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 18px;
+            display: inline-block;
         }
-        
-        .btn-increment {
-            background-color: #f06292;
+
+        .submit-btn {
+            background-color: #4299e1;
+            color: white;
+            padding: 12px 24px;
             border: none;
-            padding: 0.5rem 1.5rem;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.2s;
         }
-        
-        .btn-increment:hover {
-            background-color: #ec407a;
+
+        .submit-btn:hover {
+            background-color: #3182ce;
         }
-        
-        .btn-reset {
-            background-color: #42a5f5;
-            border: none;
-            padding: 0.5rem 1.5rem;
-        }
-        
-        .btn-reset:hover {
-            background-color: #2196f3;
+
+        .form-section {
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
     </style>
 </head>
-<body>
-    <div id="app">
-        <div class="counter-container">
-            <div class="counter-title">ตัวนับ</div>
-            <div class="counter-value">{{ count }}</div>
-            <div class="btn-group">
-                <button @click="increment" class="btn btn-increment text-white">เพิ่ม 1</button>
-                <button @click="reset" class="btn btn-reset text-white">รีเซ็ต</button>
+<body class="bg-gray-50">
+    <div id="app" class="form-container">
+        <!-- ส่วนที่ 1: ข้อมูลผู้ลงทะเบียน -->
+        <div class="form-section">
+            <h2 class="section-title">ข้อมูลผู้ลงทะเบียน</h2>
+            <div class="radio-group">
+                <label class="radio-label">
+                    <input type="radio" v-model="registrationData.prefix" value="นาย">
+                    <span class="ml-2">นาย</span>
+                </label>
+                <label class="radio-label">
+                    <input type="radio" v-model="registrationData.prefix" value="นาง">
+                    <span class="ml-2">นาง</span>
+                </label>
+                <label class="radio-label">
+                    <input type="radio" v-model="registrationData.prefix" value="นางสาว">
+                    <span class="ml-2">นางสาว</span>
+                </label>
             </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <input type="text" v-model="registrationData.firstName" placeholder="ชื่อ" class="input-field">
+                </div>
+                <div>
+                    <input type="text" v-model="registrationData.lastName" placeholder="นามสกุล" class="input-field">
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <input type="text" v-model="registrationData.idNumber" placeholder="เลขประจำตัวประชาชน" class="input-field">
+                </div>
+                <div>
+                    <input type="text" v-model="registrationData.experience" placeholder="ประสบการณ์การทำธุรกิจ (ปี)" class="input-field">
+                </div>
+            </div>
+        </div>
+
+        <!-- ส่วนที่ 2: ที่อยู่สำหรับติดต่อ -->
+        <div class="form-section">
+            <h2 class="section-title">ที่อยู่สำหรับติดต่อ</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <input type="text" v-model="contactInfo.province" placeholder="จังหวัด" class="input-field">
+                </div>
+                <div>
+                    <input type="text" v-model="contactInfo.district" placeholder="อำเภอ" class="input-field">
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <input type="text" v-model="contactInfo.subDistrict" placeholder="ตำบล" class="input-field">
+                </div>
+                <div>
+                    <input type="text" v-model="contactInfo.postalCode" placeholder="รหัสไปรษณีย์" class="input-field">
+                </div>
+            </div>
+            <div>
+                <input type="text" v-model="contactInfo.address" placeholder="รายละเอียดที่อยู่" class="input-field">
+            </div>
+        </div>
+
+        <!-- ส่วนที่ 3: ประเภทนักติด -->
+        <div class="form-section">
+            <h2 class="section-title">ประเภทนักติด</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <label class="radio-label">
+                    <input type="radio" v-model="userType" value="เกษตรกร">
+                    <span class="ml-2">เกษตรกร</span>
+                </label>
+                <label class="radio-label">
+                    <input type="radio" v-model="userType" value="มือตัดสระ">
+                    <span class="ml-2">มือตัดสระ</span>
+                </label>
+                <label class="radio-label">
+                    <input type="radio" v-model="userType" value="หัวหน้าทีมนักตัด">
+                    <span class="ml-2">หัวหน้าทีมนักตัด</span>
+                </label>
+                <label class="radio-label">
+                    <input type="radio" v-model="userType" value="มือตัดของผู้ประกอปการ/โรงคัดบรรจุ/ล้ง">
+                    <span class="ml-2">มือตัดของผู้ประกอปการ/โรงคัดบรรจุ/ล้ง</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- ส่วนที่ 4: การฝึกอบรม -->
+        <div class="form-section">
+            <h2 class="section-title">การฝึกอบรมเรื่องการตัดทุเรียน</h2>
+            <div class="radio-group">
+                <label class="radio-label">
+                    <input type="radio" v-model="training" value="ไม่เคย">
+                    <span class="ml-2">ไม่เคย</span>
+                </label>
+                <label class="radio-label">
+                    <input type="radio" v-model="training" value="เคย">
+                    <span class="ml-2">เคย</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- ส่วนที่ 5: ใบรับรอง -->
+        <div class="form-section">
+            <h2 class="section-title">ใบรับรองผ่านการฝึกอบรมการตัดทุเรียน</h2>
+            <div class="radio-group">
+                <label class="radio-label">
+                    <input type="radio" v-model="certification" value="ไม่เคย">
+                    <span class="ml-2">ไม่เคย</span>
+                </label>
+                <label class="radio-label">
+                    <input type="radio" v-model="certification" value="เคย">
+                    <span class="ml-2">เคย</span>
+                </label>
+            </div>
+            <div class="flex items-center gap-4 mt-4">
+                <input type="text" v-model="securityCode" placeholder="Security code" class="input-field w-48">
+                <div class="security-code">{{ displayedSecurityCode }}</div>
+            </div>
+        </div>
+
+        <!-- ปุ่มส่งฟอร์ม -->
+        <div class="text-center mt-6">
+            <button @click="submitForm" class="submit-btn">
+                ลงทะเบียน
+            </button>
         </div>
     </div>
 
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script>
-        const { createApp, ref } = Vue;
-
-        createApp({
-            setup() {
-                const count = ref(0);
-
-                const increment = () => {
-                    count.value++;
-                };
-
-                const reset = () => {
-                    count.value = 0;
-                };
-
-                return {
-                    count,
-                    increment,
-                    reset
-                };
+        const app = Vue.createApp({
+    data() {
+        return {
+            registrationData: {
+                prefix: 'นาย',
+                firstName: '',
+                lastName: '',
+                idNumber: '',
+                experience: '',
+            },
+            contactInfo: {
+                province: '',
+                district: '',
+                subDistrict: '',
+                postalCode: '',
+                address: '',
+            },
+            userType: 'เกษตรกร',
+            training: 'ไม่เคย',
+            certification: 'ไม่เคย',
+            securityCode: '',
+            displayedSecurityCode: '5040',
+            // เพิ่ม flag สำหรับการแสดงผลข้อมูล
+            showSubmittedData: false,
+            submittedData: null
+        }
+    },
+    computed: {
+        // เพิ่ม computed property สำหรับรวบรวมข้อมูลทั้งหมด
+        formData() {
+            return {
+                registrationInfo: {
+                    ...this.registrationData,
+                },
+                contactInformation: {
+                    ...this.contactInfo,
+                },
+                userTypeInfo: this.userType,
+                trainingInfo: this.training,
+                certificationInfo: this.certification,
             }
-        }).mount('#app');
+        }
+    },
+    methods: {
+        validateForm() {
+            if (!this.registrationData.firstName.trim()) {
+                alert('กรุณากรอกชื่อ');
+                return false;
+            }
+            if (!this.registrationData.lastName.trim()) {
+                alert('กรุณากรอกนามสกุล');
+                return false;
+            }
+            if (!this.registrationData.idNumber.trim()) {
+                alert('กรุณากรอกเลขประจำตัวประชาชน');
+                return false;
+            }
+            if (!this.contactInfo.province.trim() || !this.contactInfo.district.trim()) {
+                alert('กรุณากรอกข้อมูลที่อยู่ให้ครบถ้วน');
+                return false;
+            }
+            if (this.securityCode !== this.displayedSecurityCode) {
+                alert('รหัสความปลอดภัยไม่ถูกต้อง');
+                return false;
+            }
+            return true;
+        },
+        submitForm() {
+            if (this.validateForm()) {
+                // เก็บข้อมูลที่ส่ง
+                this.submittedData = this.formData;
+                this.showSubmittedData = true;
+                
+                // แสดงข้อมูลใน console
+                console.log('ข้อมูลการลงทะเบียน:', {
+                    ข้อมูลผู้ลงทะเบียน: this.registrationData,
+                    ที่อยู่: this.contactInfo,
+                    ประเภทนักติด: this.userType,
+                    การฝึกอบรม: this.training,
+                    ใบรับรอง: this.certification
+                });
+                
+                alert('ส่งข้อมูลเรียบร้อยแล้ว');
+                
+                // เคลียร์ฟอร์มหลังจากส่งข้อมูล
+                this.resetForm();
+            }
+        },
+        resetForm() {
+            this.registrationData = {
+                prefix: 'นาย',
+                firstName: '',
+                lastName: '',
+                idNumber: '',
+                experience: '',
+            };
+            this.contactInfo = {
+                province: '',
+                district: '',
+                subDistrict: '',
+                postalCode: '',
+                address: '',
+            };
+            this.userType = 'เกษตรกร';
+            this.training = 'ไม่เคย';
+            this.certification = 'ไม่เคย';
+            this.securityCode = '';
+        }
+    }
+});
+
+app.mount('#app');
     </script>
 </body>
 </html>
