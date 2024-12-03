@@ -1,216 +1,326 @@
-<template>
-    <div class="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
-      <h2 class="text-2xl font-bold mb-6 text-center">ลงทะเบียน</h2>
-      <form @submit.prevent="submitForm" class="space-y-4">
-        <div>
-          <label class="block mb-2">ชื่อ</label>
-          <input 
-            v-model="form.firstName" 
-            type="text" 
-            required 
-            class="w-full px-3 py-2 border rounded-md"
-          />
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แบบฟอร์มลงทะเบียน</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Thonburi", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.5;
+            color: #333;
+        }
+
+        .form-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .radio-group {
+            margin-bottom: 15px;
+        }
+
+        .radio-label {
+            display: inline-flex;
+            align-items: center;
+            margin-right: 16px;
+            cursor: pointer;
+        }
+
+        .section-title {
+            color: #2c5282;
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 0.5rem;
+        }
+
+        .security-code {
+            background-color: #f0fff4;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 18px;
+            display: inline-block;
+        }
+
+        .submit-btn {
+            background-color: #4299e1;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .submit-btn:hover {
+            background-color: #3182ce;
+        }
+
+        .form-section {
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div id="app" class="form-container">
+        <!-- ส่วนที่ 1: ข้อมูลผู้ลงทะเบียน -->
+        <div class="form-section">
+            <h2 class="section-title">ข้อมูลผู้ลงทะเบียน</h2>
+            <div class="radio-group">
+                <label class="radio-label">
+                    <input type="radio" v-model="registrationData.prefix" value="นาย">
+                    <span class="ml-2">นาย</span>
+                </label>
+                <label class="radio-label">
+                    <input type="radio" v-model="registrationData.prefix" value="นาง">
+                    <span class="ml-2">นาง</span>
+                </label>
+                <label class="radio-label">
+                    <input type="radio" v-model="registrationData.prefix" value="นางสาว">
+                    <span class="ml-2">นางสาว</span>
+                </label>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <input type="text" v-model="registrationData.firstName" placeholder="ชื่อ" class="input-field">
+                </div>
+                <div>
+                    <input type="text" v-model="registrationData.lastName" placeholder="นามสกุล" class="input-field">
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <input type="text" v-model="registrationData.idNumber" placeholder="เลขประจำตัวประชาชน" class="input-field">
+                </div>
+                <div>
+                    <input type="text" v-model="registrationData.experience" placeholder="ประสบการณ์การทำธุรกิจ (ปี)" class="input-field">
+                </div>
+            </div>
         </div>
-        <div>
-          <label class="block mb-2">นามสกุล</label>
-          <input 
-            v-model="form.lastName" 
-            type="text" 
-            required 
-            class="w-full px-3 py-2 border rounded-md"
-          />
+
+        <!-- ส่วนที่ 2: ที่อยู่สำหรับติดต่อ -->
+        <div class="form-section">
+            <h2 class="section-title">ที่อยู่สำหรับติดต่อ</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <input type="text" v-model="contactInfo.province" placeholder="จังหวัด" class="input-field">
+                </div>
+                <div>
+                    <input type="text" v-model="contactInfo.district" placeholder="อำเภอ" class="input-field">
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <input type="text" v-model="contactInfo.subDistrict" placeholder="ตำบล" class="input-field">
+                </div>
+                <div>
+                    <input type="text" v-model="contactInfo.postalCode" placeholder="รหัสไปรษณีย์" class="input-field">
+                </div>
+            </div>
+            <div>
+                <input type="text" v-model="contactInfo.address" placeholder="รายละเอียดที่อยู่" class="input-field">
+            </div>
         </div>
-        <div>
-          <label class="block mb-2">อีเมล</label>
-          <input 
-            v-model="form.email" 
-            type="email" 
-            required 
-            class="w-full px-3 py-2 border rounded-md"
-          />
+
+        <!-- ส่วนที่ 3: ประเภทนักติด -->
+        <div class="form-section">
+            <h2 class="section-title">ประเภทนักติด</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <label class="radio-label">
+                    <input type="radio" v-model="userType" value="เกษตรกร">
+                    <span class="ml-2">เกษตรกร</span>
+                </label>
+                <label class="radio-label">
+                    <input type="radio" v-model="userType" value="มือตัดสระ">
+                    <span class="ml-2">มือตัดสระ</span>
+                </label>
+                <label class="radio-label">
+                    <input type="radio" v-model="userType" value="หัวหน้าทีมนักตัด">
+                    <span class="ml-2">หัวหน้าทีมนักตัด</span>
+                </label>
+                <label class="radio-label">
+                    <input type="radio" v-model="userType" value="มือตัดของผู้ประกอปการ/โรงคัดบรรจุ/ล้ง">
+                    <span class="ml-2">มือตัดของผู้ประกอปการ/โรงคัดบรรจุ/ล้ง</span>
+                </label>
+            </div>
         </div>
-        <div>
-          <label class="block mb-2">ชื่อผู้ใช้</label>
-          <input 
-            v-model="form.username" 
-            type="text" 
-            required 
-            class="w-full px-3 py-2 border rounded-md"
-          />
+
+        <!-- ส่วนที่ 4: การฝึกอบรม -->
+        <div class="form-section">
+            <h2 class="section-title">การฝึกอบรมเรื่องการตัดทุเรียน</h2>
+            <div class="radio-group">
+                <label class="radio-label">
+                    <input type="radio" v-model="training" value="ไม่เคย">
+                    <span class="ml-2">ไม่เคย</span>
+                </label>
+                <label class="radio-label">
+                    <input type="radio" v-model="training" value="เคย">
+                    <span class="ml-2">เคย</span>
+                </label>
+            </div>
         </div>
-        <div>
-          <label class="block mb-2">รหัสผ่าน</label>
-          <input 
-            v-model="form.password" 
-            type="password" 
-            required 
-            class="w-full px-3 py-2 border rounded-md"
-          />
+
+        <!-- ส่วนที่ 5: ใบรับรอง -->
+        <div class="form-section">
+            <h2 class="section-title">ใบรับรองผ่านการฝึกอบรมการตัดทุเรียน</h2>
+            <div class="radio-group">
+                <label class="radio-label">
+                    <input type="radio" v-model="certification" value="ไม่เคย">
+                    <span class="ml-2">ไม่เคย</span>
+                </label>
+                <label class="radio-label">
+                    <input type="radio" v-model="certification" value="เคย">
+                    <span class="ml-2">เคย</span>
+                </label>
+            </div>
+            <div class="flex items-center gap-4 mt-4">
+                <input type="text" v-model="securityCode" placeholder="Security code" class="input-field w-48">
+                <div class="security-code">{{ displayedSecurityCode }}</div>
+            </div>
         </div>
-        <div>
-          <label class="block mb-2">จังหวัด</label>
-          <select 
-            v-model="form.province" 
-            @change="fetchDistricts"
-            required 
-            class="w-full px-3 py-2 border rounded-md"
-          >
-            <option value="">เลือกจังหวัด</option>
-            <option 
-              v-for="province in provinces" 
-              :key="province" 
-              :value="province"
-            >
-              {{ province }}
-            </option>
-          </select>
+
+        <!-- ปุ่มส่งฟอร์ม -->
+        <div class="text-center mt-6">
+            <button @click="submitForm" class="submit-btn">
+                ลงทะเบียน
+            </button>
         </div>
-        <div>
-          <label class="block mb-2">อำเภอ</label>
-          <select 
-            v-model="form.district" 
-            @change="fetchSubDistricts"
-            :disabled="!form.province"
-            required 
-            class="w-full px-3 py-2 border rounded-md"
-          >
-            <option value="">เลือกอำเภอ</option>
-            <option 
-              v-for="district in districts" 
-              :key="district" 
-              :value="district"
-            >
-              {{ district }}
-            </option>
-          </select>
-        </div>
-        <div>
-          <label class="block mb-2">ตำบล</label>
-          <select 
-            v-model="form.subDistrict"
-            :disabled="!form.district"
-            required 
-            class="w-full px-3 py-2 border rounded-md"
-          >
-            <option value="">เลือกตำบล</option>
-            <option 
-              v-for="subDistrict in subDistricts" 
-              :key="subDistrict" 
-              :value="subDistrict"
-            >
-              {{ subDistrict }}
-            </option>
-          </select>
-        </div>
-        <button 
-          type="submit" 
-          class="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition"
-        >
-          ลงทะเบียน
-        </button>
-      </form>
     </div>
-  </template>
-  
-  <script>
-  import axios from 'axios';
-  
-  export default {
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script>
+        const app = Vue.createApp({
     data() {
-      return {
-        form: {
-          firstName: '',
-          lastName: '',
-          username: '',
-          password: '',
-          email: '',
-          province: '',
-          district: '',
-          subDistrict: ''
-        },
-        provinces: [],
-        districts: [],
-        subDistricts: []
-      };
+        return {
+            registrationData: {
+                prefix: 'นาย',
+                firstName: '',
+                lastName: '',
+                idNumber: '',
+                experience: '',
+            },
+            contactInfo: {
+                province: '',
+                district: '',
+                subDistrict: '',
+                postalCode: '',
+                address: '',
+            },
+            userType: 'เกษตรกร',
+            training: 'ไม่เคย',
+            certification: 'ไม่เคย',
+            securityCode: '',
+            displayedSecurityCode: '5040',
+            // เพิ่ม flag สำหรับการแสดงผลข้อมูล
+            showSubmittedData: false,
+            submittedData: null
+        }
     },
-    mounted() {
-      this.fetchProvinces();
+    computed: {
+        // เพิ่ม computed property สำหรับรวบรวมข้อมูลทั้งหมด
+        formData() {
+            return {
+                registrationInfo: {
+                    ...this.registrationData,
+                },
+                contactInformation: {
+                    ...this.contactInfo,
+                },
+                userTypeInfo: this.userType,
+                trainingInfo: this.training,
+                certificationInfo: this.certification,
+            }
+        }
     },
     methods: {
-      async fetchProvinces() {
-        try {
-          const response = await axios.get('/provinces');
-          this.provinces = response.data;
-        } catch (error) {
-          console.error('Error fetching provinces:', error);
-          alert('ไม่สามารถโหลดข้อมูลจังหวัดได้');
+        validateForm() {
+            if (!this.registrationData.firstName.trim()) {
+                alert('กรุณากรอกชื่อ');
+                return false;
+            }
+            if (!this.registrationData.lastName.trim()) {
+                alert('กรุณากรอกนามสกุล');
+                return false;
+            }
+            if (!this.registrationData.idNumber.trim()) {
+                alert('กรุณากรอกเลขประจำตัวประชาชน');
+                return false;
+            }
+            if (!this.contactInfo.province.trim() || !this.contactInfo.district.trim()) {
+                alert('กรุณากรอกข้อมูลที่อยู่ให้ครบถ้วน');
+                return false;
+            }
+            if (this.securityCode !== this.displayedSecurityCode) {
+                alert('รหัสความปลอดภัยไม่ถูกต้อง');
+                return false;
+            }
+            return true;
+        },
+        submitForm() {
+            if (this.validateForm()) {
+                // เก็บข้อมูลที่ส่ง
+                this.submittedData = this.formData;
+                this.showSubmittedData = true;
+                
+                // แสดงข้อมูลใน console
+                console.log('ข้อมูลการลงทะเบียน:', {
+                    ข้อมูลผู้ลงทะเบียน: this.registrationData,
+                    ที่อยู่: this.contactInfo,
+                    ประเภทนักติด: this.userType,
+                    การฝึกอบรม: this.training,
+                    ใบรับรอง: this.certification
+                });
+                
+                alert('ส่งข้อมูลเรียบร้อยแล้ว');
+                
+                // เคลียร์ฟอร์มหลังจากส่งข้อมูล
+                this.resetForm();
+            }
+        },
+        resetForm() {
+            this.registrationData = {
+                prefix: 'นาย',
+                firstName: '',
+                lastName: '',
+                idNumber: '',
+                experience: '',
+            };
+            this.contactInfo = {
+                province: '',
+                district: '',
+                subDistrict: '',
+                postalCode: '',
+                address: '',
+            };
+            this.userType = 'เกษตรกร';
+            this.training = 'ไม่เคย';
+            this.certification = 'ไม่เคย';
+            this.securityCode = '';
         }
-      },
-      async fetchDistricts() {
-        // Reset dependent fields
-        this.form.district = '';
-        this.form.subDistrict = '';
-        this.districts = [];
-        this.subDistricts = [];
-  
-        if (!this.form.province) return;
-  
-        try {
-          const response = await axios.get(`/provinces/${this.form.province}`);
-          this.districts = response.data;
-        } catch (error) {
-          console.error('Error fetching districts:', error);
-          alert('ไม่สามารถโหลดข้อมูลอำเภอได้');
-        }
-      },
-      async fetchSubDistricts() {
-        // Reset dependent fields
-        this.form.subDistrict = '';
-        this.subDistricts = [];
-  
-        if (!this.form.district) return;
-  
-        try {
-          const response = await axios.get(`/provinces/${this.form.province}/${this.form.district}`);
-          this.subDistricts = response.data;
-        } catch (error) {
-          console.error('Error fetching sub-districts:', error);
-          alert('ไม่สามารถโหลดข้อมูลตำบลได้');
-        }
-      },
-      async submitForm() {
-        try {
-          const response = await axios.post('/register', {
-            username: this.form.username,
-            password: this.form.password,
-            email: this.form.email,
-            province: this.form.province,
-            district: this.form.district,
-            sub_district: this.form.subDistrict
-          });
-  
-          alert('ลงทะเบียนสำเร็จ');
-          // Optional: redirect or clear form
-          this.resetForm();
-        } catch (error) {
-          console.error('Registration error:', error);
-          alert('การลงทะเบียนล้มเหลว');
-        }
-      },
-      resetForm() {
-        this.form = {
-          firstName: '',
-          lastName: '',
-          username: '',
-          password: '',
-          email: '',
-          province: '',
-          district: '',
-          subDistrict: ''
-        };
-        this.districts = [];
-        this.subDistricts = [];
-      }
     }
-  };
-  </script>
+});
+
+app.mount('#app');
+    </script>
+</body>
+</html>
