@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dynamic Form with API</title>
+  <title>Dynamic Address Form</title>
 </head>
 <body>
   <h1>Dynamic Address Form</h1>
@@ -37,7 +37,7 @@
     // Load provinces
     async function loadProvinces() {
       try {
-        const response = await fetch('/provinces');
+        const response = await fetch('http://localhost:3000/provinces');
         if (!response.ok) throw new Error('Error fetching provinces');
         const provinces = await response.json();
 
@@ -56,7 +56,7 @@
     // Load districts when province is selected
     async function loadDistricts(province) {
       try {
-        const response = await fetch(`/provinces/${province}`);
+        const response = await fetch(`http://localhost:3000/provinces/${province}`);
         if (!response.ok) throw new Error('Error fetching districts');
         const districts = await response.json();
 
@@ -76,7 +76,7 @@
     // Load subdistricts when district is selected
     async function loadSubDistricts(province, district) {
       try {
-        const response = await fetch(`/provinces/${province}/${district}`);
+        const response = await fetch(`http://localhost:3000/provinces/${province}/${district}`);
         if (!response.ok) throw new Error('Error fetching subdistricts');
         const subDistricts = await response.json();
 
@@ -119,8 +119,7 @@
       const formData = new FormData(event.target);
       const data = Object.fromEntries(formData.entries());
       console.log('Form submitted with data:', data);
-
-      // You can add an API call to submit the form data here
+      alert(JSON.stringify(data, null, 2));
     });
 
     // Initial load
